@@ -1,0 +1,5 @@
+[user]
+  name = John Johannessen
+	email = johnj@slaskdot.org
+[push]
+	default = simple
