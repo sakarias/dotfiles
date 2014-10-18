@@ -27,7 +27,7 @@ set number
 " Enable syntax highlighting
 syntax on
 set background=dark
-colorscheme badwolf
+colorscheme solarized
 " Highlight current line
 set cursorline
 " Make tabs as wide as two spaces
