@@ -1,3 +1,4 @@
+execute pathogen#infect()
 " Make vim more useful
 set nocompatible
 " Enhance command-line completion
@@ -31,7 +32,9 @@ colorscheme solarized
 " Highlight current line
 set cursorline
 " Make tabs as wide as two spaces
-set tabstop=4
+set tabstop=2
+set shiftwidth=2
+set expandtab
 " Show “invisible” characters
 set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
 set list
@@ -85,7 +88,5 @@ if has("autocmd")
 	filetype on
 	" Treat .json files as .js
 	autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
-endif
-if has("autocmd")
-	au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+	au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g'\"" | endif
 endif
