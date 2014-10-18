@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Start a new screen session with weechat or attach to an already running one.
+
+if screen -list | grep "\.weechat" > /dev/null
+then # running
+        screen -rd weechat
+else # not running
+        screen -S weechat -t weechat weechat-curses
+fi
+
+exit 0

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+SESSIONNAME='weechat' && (tmux attach-session -t $SESSIONNAME || tmux new-session -s $SESSIONNAME)
+
+exit 0
