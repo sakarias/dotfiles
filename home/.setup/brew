@@ -1,0 +1,10 @@
+#! /bin/bash
+
+brew update && brew upgrade
+brew install autojump
+brew install ssh-copy-id
+brew install mtr --no-gtk && sudo chown root:wheel /usr/local/Cellar/mtr/0.85/sbin/mtr && sudo chmod u+s /usr/local/Cellar/mtr/0.85/sbin/mtr
+brew install git
+brew install wget --enable-iri
+brew install csshx
+brew install mobile-shell
