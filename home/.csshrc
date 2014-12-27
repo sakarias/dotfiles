@@ -1,4 +1,6 @@
+#ssh=/usr/local/bin/mosh
+#ssh_args=
 clusters = local remote
 
 local = rs-apt01.home.rockstable.net rs-bast01.home.rockstable.net rs-logs01.home.rockstable.net rs-monitoring01.home.rockstable.net rs-ns01.home.rockstable.net rs-ns02.home.rockstable.net rs-plex01.home.rockstable.net rs-puppet01.home.rockstable.net rs-rancid01.home.rockstable.net rs-sab01.home.rockstable.net rs-torrent01.home.rockstable.net rs-web01.home.rockstable.net rs-zabbix01.home.rockstable.net
-remote = alpha.rockstable.net charlie.rockstable.net delta.rockstable.net echo.rockstable.net gamma.rockstable.net foxtrot.rockstable.net
+remote = alpha.rockstable.net charlie.rockstable.net echo.rockstable.net gamma.rockstable.net foxtrot.rockstable.net
