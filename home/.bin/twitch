@@ -1,0 +1,24 @@
+#!/bin/bash
+
+function openstream {
+  livestreamer -Q -p "/Applications/VLC.app/Contents/MacOS/VLC --file-caching=5000" http://twitch.tv/${1} source
+}
+
+if [ ! ${1} ]
+then
+
+  echo "1) zisteau"
+  echo "2) squirrel"
+
+  read stream
+
+  case ${stream} in
+    1)  openstream zisteau
+        ;;
+    2)  openstream squirrel
+        ;;
+  esac
+
+else
+  openstream ${1}
+fi
