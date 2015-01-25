@@ -9,13 +9,18 @@ then
 
   echo "1) zisteau"
   echo "2) squirrel"
-
+  echo "3) einar"
+  echo "4) sjokomelk"
   read stream
 
   case ${stream} in
     1)  openstream zisteau
         ;;
     2)  openstream squirrel
+        ;;
+    3)  openstream einarjh 
+        ;;
+    4)  openstream sjokomelk 
         ;;
   esac
 
