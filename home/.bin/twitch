@@ -1,16 +1,19 @@
 #!/bin/bash
 
 function openstream {
-  livestreamer -Q -p "/Applications/VLC.app/Contents/MacOS/VLC --file-caching=5000" http://twitch.tv/${1} source
+  livestreamer -Q -p "/Applications/VLC.app/Contents/MacOS/VLC --file-caching=5000" http://twitch.tv/${1} medium 
 }
 
 if [ ! ${1} ]
 then
 
-  echo "1) zisteau"
-  echo "2) squirrel"
-  echo "3) einar"
-  echo "4) sjokomelk"
+  echo "1) Zisteau"
+  echo "2) Squirrel"
+  echo "3) JayzTwoCents"
+  echo "4) Barnacules"
+  echo "5) Einarjh"
+  echo "6) Sjokomelk"
+
   read stream
 
   case ${stream} in
@@ -18,10 +21,15 @@ then
         ;;
     2)  openstream squirrel
         ;;
-    3)  openstream einarjh 
+    3)  openstream jaysvfx
         ;;
-    4)  openstream sjokomelk 
+    4)  openstream barnacules
         ;;
+    5)  openstream einarjh
+        ;;
+    6)  openstream sjokomelk
+        ;;
+
   esac
 
 else
