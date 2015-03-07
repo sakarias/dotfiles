@@ -13,7 +13,7 @@ liveStreamerConfig=${HOME}/.livestreamerrc
 
 if [ ! -e "/usr/local/bin/jshon" ];
 then
-  echo "jshon is not installed."
+  echo "Error: jshon is not installed."
   exit 1
 fi
 
@@ -24,7 +24,7 @@ then
 
   if [ ! ${twitchToken} ];
   then
-    echo "Could not find your Twitch Token from LiveStreamer config file."
+    echo "Error: Could not find your Twitch Token from LiveStreamer config file."
     exit 1
   fi
 
@@ -36,6 +36,9 @@ then
     echo "Setting your stream quality to worst."
     liveStreamerQuality="worst"
   fi
+else
+  echo "Error: Could not find ${liveStreamerConfig}."
+  exit 1
 fi
 
 function openStream {
@@ -64,10 +67,11 @@ while [ ${i} -lt ${streamFollowingTotal} ]
 do
   streamFollowingName=$(cat ${streamTempFile} | jshon -e streams -e ${i} -e channel -e name | tr -d '"')
   streamFollowingGame=$(cat ${streamTempFile} | jshon -e streams -e ${i} -e channel -e game | tr -d '"')  
-  echo "  $[${i}+1]) ${streamFollowingName} (playing ${streamFollowingGame})"
+  printf "%3s %s \t\t %s \n" "$[${i}+1])" ${streamFollowingName} "(playing ${streamFollowingGame})"
   i=$[${i}+1]
 done
 
+echo -n "> "
 read streamToWatch
 
 if [[ ! ${streamToWatch} =~ ^[0-9]+$ ]];
