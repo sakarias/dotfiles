@@ -44,18 +44,19 @@ fi
 i=0
 echo
 echo "Streamers live right now:"
+
 while [ ${i} -lt ${streamFollowingTotal} ]
-  do
+do
   streamFollowingName=$(cat ${streamTempFile} | jshon -e streams -e ${i} -e channel -e name | tr -d '"')
   streamFollowingGame=$(cat ${streamTempFile} | jshon -e streams -e ${i} -e channel -e game | tr -d '"')  
   echo "  $[${i}+1]) ${streamFollowingName} (playing ${streamFollowingGame})"
   i=$[${i}+1]
 done
+
 read streamToWatch
 
 if [[ ! ${streamToWatch} =~ ^[0-9]+$ ]];
 then
-  echo "not number"
   exit 0
 fi
 
