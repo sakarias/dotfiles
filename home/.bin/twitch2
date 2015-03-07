@@ -1,11 +1,15 @@
 #!/bin/bash
 
 # Depends on jshon (brew install jshon)
+# ${HOME}/.livestreamerrc needs the following
+# 
+# twitch-oauth-token=<your token>
+# default-stream=<desired stream quality> (like best, 720p, 480p, mobile, worst)
+#
 
 clear
 
 liveStreamerConfig=${HOME}/.livestreamerrc
-liveStreamerQuality="best"
 
 function openStream {
   livestreamer -Q -p "/Applications/VLC.app/Contents/MacOS/VLC --file-caching=5000" ${1} ${liveStreamerQuality}
@@ -20,10 +24,21 @@ fi
 if [ -e ${liveStreamerConfig} ];
 then
   twitchToken=$(grep "twitch-oauth-token" ${liveStreamerConfig} | cut -f 2 -d "=")
+  liveStreamerQualitySetting=$(grep "default-stream" ${liveStreamerConfig} | cut -f 2 -d "=")
+
   if [ ! ${twitchToken} ];
   then
     echo "Could not find your Twitch Token from LiveStreamer config file."
     exit 1
+  fi
+
+  if [ ${liveStreamerQualitySetting} ]
+  then
+    liveStreamerQuality=${liveStreamerQualitySetting}
+  else
+    echo "You need to set default-stream setting in your ${HOME}/.livestreamerrc"
+    echo "Setting your stream quality to worst."
+    liveStreamerQuality="worst"
   fi
 fi
 
