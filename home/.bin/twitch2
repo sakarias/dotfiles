@@ -11,10 +11,6 @@ clear
 
 liveStreamerConfig=${HOME}/.livestreamerrc
 
-function openStream {
-  livestreamer -Q -p "/Applications/VLC.app/Contents/MacOS/VLC --file-caching=5000" ${1} ${liveStreamerQuality}
-}
-
 if [ ! -e "/usr/local/bin/jshon" ];
 then
   echo "jshon is not installed."
@@ -41,6 +37,10 @@ then
     liveStreamerQuality="worst"
   fi
 fi
+
+function openStream {
+  livestreamer -Q -p "/Applications/VLC.app/Contents/MacOS/VLC --file-caching=5000" --twitch-oauth-token ${twitchToken}${1} ${liveStreamerQuality}
+}
 
 streamTempFile=$(mktemp /tmp/twitch.XXXXXXXXXX)
 
