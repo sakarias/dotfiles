@@ -1,8 +1,15 @@
 #!/bin/bash
 
 function openstream {
-  livestreamer -Q -p "/Applications/VLC.app/Contents/MacOS/VLC --file-caching=5000" http://twitch.tv/${1} medium 
+  livestreamer -Q -p "/Applications/VLC.app/Contents/MacOS/VLC --file-caching=5000" http://twitch.tv/${1} ${quality}
 }
+
+if [ ${2} ]
+then
+  quality="${2}"
+else
+  quality="best"
+fi
 
 if [ ! ${1} ]
 then
