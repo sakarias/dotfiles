@@ -1,0 +1,65 @@
+#!/bin/bash
+
+# Depends on jshon (brew install jshon)
+
+clear
+
+liveStreamerConfig=${HOME}/.livestreamerrc
+liveStreamerQuality="best"
+
+function openStream {
+  livestreamer -Q -p "/Applications/VLC.app/Contents/MacOS/VLC --file-caching=5000" ${1} ${liveStreamerQuality}
+}
+
+if [ ! -e "/usr/local/bin/jshon" ];
+  then
+    echo "jshon is not installed."
+    exit 1
+fi
+
+if [ -e ${liveStreamerConfig} ];
+  then
+    twitchToken=$(grep "twitch-oauth-token" ${liveStreamerConfig} | cut -f 2 -d "=")
+    if [ ! ${twitchToken} ];
+      then
+      echo "Could not find your Twitch Token from LiveStramer config file."
+      exit 1
+    fi
+fi
+
+streamTempFile=$(mktemp /tmp/twitch.XXXXXXXXXX)
+
+curl -s -H "Accept: application/vnd.twitchtv.v3+json" \
+   -H "Authorization: OAuth ${twitchToken}" -X GET https://api.twitch.tv/kraken/streams/followed \
+   | jshon > ${streamTempFile}
+
+#streamTempFile="/tmp/testing"
+
+streamFollowingTotal=$(cat ${streamTempFile} | jshon -e _total)
+
+if [ ${streamFollowingTotal} -eq 0 ];
+  then
+  echo "No streamers followed are live right now."
+  exit 0
+fi
+
+i=0
+echo
+while [ ${i} -lt ${streamFollowingTotal} ]
+  do
+  streamFollowingName=$(cat ${streamTempFile} | jshon -e streams -e ${i} -e name | tr -d '"')
+  streamFollowingGame=$(cat ${streamTempFile} | jshon -e streams -e ${i} -e game | tr -d '"')  
+  echo "  $[${i}+1]) ${streamFollowingName} (playing ${streamFollowingGame})"
+  i=$[${i}+1]
+done
+read streamToWatch
+
+streamToWatch=$[${streamToWatch}-1]
+
+streamFollowingUrl=$(cat ${streamTempFile} | jshon -e streams -e ${streamToWatch} -e channel -e url | tr -d '"')
+
+echo ${streamFollowingUrl}
+openStream ${streamFollowingUrl}
+
+rm ${streamTempFile}
+echo ""
