@@ -72,6 +72,7 @@ read streamToWatch
 
 if [[ ! ${streamToWatch} =~ ^[0-9]+$ ]];
 then
+  rm ${streamTempFile}
   exit 0
 fi
 
