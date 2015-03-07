@@ -43,19 +43,25 @@ fi
 
 i=0
 echo
+echo "Streamers live right now:"
 while [ ${i} -lt ${streamFollowingTotal} ]
   do
-  streamFollowingName=$(cat ${streamTempFile} | jshon -e streams -e ${i} -e name | tr -d '"')
-  streamFollowingGame=$(cat ${streamTempFile} | jshon -e streams -e ${i} -e game | tr -d '"')  
+  streamFollowingName=$(cat ${streamTempFile} | jshon -e streams -e ${i} -e channel -e name | tr -d '"')
+  streamFollowingGame=$(cat ${streamTempFile} | jshon -e streams -e ${i} -e channel -e game | tr -d '"')  
   echo "  $[${i}+1]) ${streamFollowingName} (playing ${streamFollowingGame})"
   i=$[${i}+1]
 done
 read streamToWatch
 
+if [[ ! ${streamToWatch} =~ ^[0-9]+$ ]];
+then
+  echo "not number"
+  exit 0
+fi
+
 streamToWatch=$[${streamToWatch}-1]
 streamFollowingUrl=$(cat ${streamTempFile} | jshon -e streams -e ${streamToWatch} -e channel -e url | tr -d '"')
 
-echo ${streamFollowingUrl}
 openStream ${streamFollowingUrl}
 
 rm ${streamTempFile}
