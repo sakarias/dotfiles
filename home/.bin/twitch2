@@ -12,19 +12,19 @@ function openStream {
 }
 
 if [ ! -e "/usr/local/bin/jshon" ];
-  then
-    echo "jshon is not installed."
-    exit 1
+then
+  echo "jshon is not installed."
+  exit 1
 fi
 
 if [ -e ${liveStreamerConfig} ];
+then
+  twitchToken=$(grep "twitch-oauth-token" ${liveStreamerConfig} | cut -f 2 -d "=")
+  if [ ! ${twitchToken} ];
   then
-    twitchToken=$(grep "twitch-oauth-token" ${liveStreamerConfig} | cut -f 2 -d "=")
-    if [ ! ${twitchToken} ];
-      then
-      echo "Could not find your Twitch Token from LiveStramer config file."
-      exit 1
-    fi
+    echo "Could not find your Twitch Token from LiveStreamer config file."
+    exit 1
+  fi
 fi
 
 streamTempFile=$(mktemp /tmp/twitch.XXXXXXXXXX)
@@ -32,8 +32,6 @@ streamTempFile=$(mktemp /tmp/twitch.XXXXXXXXXX)
 curl -s -H "Accept: application/vnd.twitchtv.v3+json" \
    -H "Authorization: OAuth ${twitchToken}" -X GET https://api.twitch.tv/kraken/streams/followed \
    | jshon > ${streamTempFile}
-
-#streamTempFile="/tmp/testing"
 
 streamFollowingTotal=$(cat ${streamTempFile} | jshon -e _total)
 
@@ -55,11 +53,10 @@ done
 read streamToWatch
 
 streamToWatch=$[${streamToWatch}-1]
-
 streamFollowingUrl=$(cat ${streamTempFile} | jshon -e streams -e ${streamToWatch} -e channel -e url | tr -d '"')
 
 echo ${streamFollowingUrl}
 openStream ${streamFollowingUrl}
 
 rm ${streamTempFile}
-echo ""
+echo
