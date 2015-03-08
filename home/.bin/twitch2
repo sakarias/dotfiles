@@ -11,9 +11,18 @@ clear
 
 liveStreamerConfig=${HOME}/.livestreamerrc
 
+colorOff='\033[0m'
+yellow='\033[0;33m'
+cyan='\033[0;36m'
+red='\033[1;31m'
+white='\033[1;37m'
+green='\033[4;32m'
+
 if [ ! -e "/usr/local/bin/jshon" ];
 then
-  echo "Error: jshon is not installed."
+  echo
+  echo -e "${red}Error:${colorOff} jshon is not installed."
+  echo
   exit 1
 fi
 
@@ -24,7 +33,9 @@ then
 
   if [ ! ${twitchToken} ];
   then
-    echo "Error: Could not find your Twitch Token from LiveStreamer config file."
+    echo
+    echo -e "${red}Error:${colorOff} Could not find your Twitch Token from LiveStreamer config file."
+    echo
     exit 1
   fi
 
@@ -37,7 +48,9 @@ then
     liveStreamerQuality="worst"
   fi
 else
-  echo "Error: Could not find ${liveStreamerConfig}."
+  echo
+  echo -e "${red}Error:${colorOff} Could not find ${liveStreamerConfig}."
+  echo
   exit 1
 fi
 
@@ -55,17 +68,21 @@ streamFollowingTotal=$(cat ${streamTempFile} | jshon -e _total)
 
 if [ ${streamFollowingTotal} -eq 0 ];
   then
-  echo "No streamers followed are live right now."
+  echo
+  echo -e "${yellow}No streamers followed are live right now.${colorOff}"
+  echo
   exit 0
 fi
 
 i=0
 echo
-echo "Streamers live right now:"
+echo -e "${green}Streamers live right now:${colorOff}"
 
 while [ ${i} -lt ${streamFollowingTotal} ]
 do
-  printf "%3s %s \t\t %s \n" "$[${i}+1])" ${streamFollowingName} "(playing ${streamFollowingGame})"
+  streamFollowingName=$(cat ${streamTempFile} | jshon -e streams -e ${i} -e channel -e name -u)
+  streamFollowingGame=$(cat ${streamTempFile} | jshon -e streams -e ${i} -e channel -e game -u)
+  printf "${white}%3s${colorOff} ${yellow}%s${colorOff} \t\t ${cyan}%s${colorOff} \n" "$[${i}+1])" ${streamFollowingName} "(playing ${streamFollowingGame})"
   i=$[${i}+1]
 done
 
