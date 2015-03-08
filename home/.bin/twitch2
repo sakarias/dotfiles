@@ -96,6 +96,7 @@ then
 fi
 
 streamToWatch=$[${streamToWatch}-1]
+streamFollowingUrl=$(cat ${streamTempFile} | jshon -e streams -e ${streamToWatch} -e channel -e url -u)
 
 openStream ${streamFollowingUrl}
 
