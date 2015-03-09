@@ -18,7 +18,7 @@ red='\033[1;31m'
 white='\033[1;37m'
 green='\033[4;32m'
 
-if [ ! -e "/usr/local/bin/jshon" ];
+if [ ! -e "/usr/local/bin/jshon" ]
 then
   echo
   echo -e "${red}Error:${colorOff} jshon is not installed."
@@ -26,7 +26,7 @@ then
   exit 1
 fi
 
-if [ -e ${liveStreamerConfig} ];
+if [ -e ${liveStreamerConfig} ]
 then
   twitchToken=$(grep "twitch-oauth-token" ${liveStreamerConfig} | cut -f 2 -d "=")
   liveStreamerQualitySetting=$(grep "default-stream" ${liveStreamerConfig} | cut -f 2 -d "=")
@@ -72,8 +72,8 @@ curl -s -H "Accept: application/vnd.twitchtv.v3+json" \
 
 streamFollowingTotal=$(cat ${streamTempFile} | jshon -e _total)
 
-if [ ${streamFollowingTotal} -eq 0 ];
-  then
+if [ ${streamFollowingTotal} -eq 0 ]
+then
   echo
   echo -e "${yellow}No streamers followed are live right now.${colorOff}"
   echo
@@ -95,7 +95,7 @@ done
 echo -n "> "
 read streamToWatch
 
-if [[ ! ${streamToWatch} =~ ^[0-9]+$ ]];
+if [[ ! ${streamToWatch} =~ ^[0-9]+$ ]]
 then
   rm ${streamTempFile}
   exit 0
