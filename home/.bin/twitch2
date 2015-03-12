@@ -60,7 +60,13 @@ function openStream {
 
 if [ ${1} ]
 then
-  openStream ${1}
+  regex='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+  if [[ ${1} =~ ${regex} ]]
+  then 
+    openStream ${1}
+  else
+    openStream http://twitch.tv/${1}
+  fi
   exit 0
 fi
 
