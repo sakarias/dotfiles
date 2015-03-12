@@ -58,6 +58,10 @@ function openStream {
   livestreamer -Q -p "/Applications/VLC.app/Contents/MacOS/VLC --file-caching=5000" --twitch-oauth-token ${twitchToken} ${1} ${liveStreamerQuality}
 }
 
+function cleanUp {
+  rm ${streamTempFile}
+}
+
 if [ ${1} ]
 then
   regex='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
@@ -83,6 +87,7 @@ then
   echo
   echo -e "${yellow}No streamers followed are live right now.${colorOff}"
   echo
+  cleanUp
   exit 0
 fi
 
@@ -103,7 +108,7 @@ read streamToWatch
 
 if [[ ! ${streamToWatch} =~ ^[0-9]+$ ]]
 then
-  rm ${streamTempFile}
+  cleanUp
   exit 0
 fi
 
@@ -112,5 +117,5 @@ streamFollowingUrl=$(cat ${streamTempFile} | jshon -e streams -e ${streamToWatch
 
 openStream ${streamFollowingUrl}
 
-rm ${streamTempFile}
+cleanUp
 echo
