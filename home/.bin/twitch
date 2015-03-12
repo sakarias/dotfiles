@@ -1,44 +1,116 @@
 #!/bin/bash
 
-function openstream {
-  livestreamer -Q -p "/Applications/VLC.app/Contents/MacOS/VLC --file-caching=5000" http://twitch.tv/${1} ${quality}
+# Depends on jshon (brew install jshon)
+# ${HOME}/.livestreamerrc needs the following
+# 
+# twitch-oauth-token=<your token>
+# default-stream=<desired stream quality> (like best, 720p, 480p, mobile, worst)
+#
+
+clear
+
+liveStreamerConfig=${HOME}/.livestreamerrc
+
+colorOff='\033[0m'
+yellow='\033[0;33m'
+cyan='\033[0;36m'
+red='\033[1;31m'
+white='\033[1;37m'
+green='\033[4;32m'
+
+if [ ! -e "/usr/local/bin/jshon" ]
+then
+  echo
+  echo -e "${red}Error:${colorOff} jshon is not installed."
+  echo
+  exit 1
+fi
+
+if [ -e ${liveStreamerConfig} ]
+then
+  twitchToken=$(grep "twitch-oauth-token" ${liveStreamerConfig} | cut -f 2 -d "=")
+  liveStreamerQualitySetting=$(grep "default-stream" ${liveStreamerConfig} | cut -f 2 -d "=")
+
+  if [ ! ${twitchToken} ];
+  then
+    echo
+    echo -e "${red}Error:${colorOff} Could not find your Twitch Token from LiveStreamer config file."
+    echo
+    exit 1
+  fi
+
+  if [ ${liveStreamerQualitySetting} ]
+  then
+    liveStreamerQuality=${liveStreamerQualitySetting}
+  else
+    echo "You need to set default-stream setting in your ${HOME}/.livestreamerrc"
+    echo "Setting your stream quality to worst."
+    liveStreamerQuality="worst"
+  fi
+else
+  echo
+  echo -e "${red}Error:${colorOff} Could not find ${liveStreamerConfig}."
+  echo
+  exit 1
+fi
+
+function openStream {
+  livestreamer -Q -p "/Applications/VLC.app/Contents/MacOS/VLC --file-caching=5000" --twitch-oauth-token ${twitchToken} ${1} ${liveStreamerQuality}
 }
 
-if [ ${2} ]
+if [ ${1} ]
 then
-  quality="${2}"
-else
-  quality="best"
+  regex='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+  if [[ ${1} =~ ${regex} ]]
+  then 
+    openStream ${1}
+  else
+    openStream http://twitch.tv/${1}
+  fi
+  exit 0
 fi
 
-if [ ! ${1} ]
+streamTempFile=$(mktemp /tmp/twitch.XXXXXXXXXX)
+
+curl -s -H "Accept: application/vnd.twitchtv.v3+json" \
+   -H "Authorization: OAuth ${twitchToken}" -X GET https://api.twitch.tv/kraken/streams/followed \
+   | jshon > ${streamTempFile}
+
+streamFollowingTotal=$(cat ${streamTempFile} | jshon -e _total)
+
+if [ ${streamFollowingTotal} -eq 0 ]
 then
-
-  echo "1) Zisteau"
-  echo "2) Squirrel"
-  echo "3) JayzTwoCents"
-  echo "4) Barnacules"
-  echo "5) Einarjh"
-  echo "6) Sjokomelk"
-
-  read stream
-
-  case ${stream} in
-    1)  openstream zisteau
-        ;;
-    2)  openstream squirrel
-        ;;
-    3)  openstream jaysvfx
-        ;;
-    4)  openstream barnacules
-        ;;
-    5)  openstream einarjh
-        ;;
-    6)  openstream sjokomelk
-        ;;
-
-  esac
-
-else
-  openstream ${1}
+  echo
+  echo -e "${yellow}No streamers followed are live right now.${colorOff}"
+  echo
+  exit 0
 fi
+
+i=0
+echo
+echo -e "${green}Streamers live right now:${colorOff}"
+
+while [ ${i} -lt ${streamFollowingTotal} ]
+do
+  streamFollowingName=$(cat ${streamTempFile} | jshon -e streams -e ${i} -e channel -e name -u)
+  streamFollowingGame=$(cat ${streamTempFile} | jshon -e streams -e ${i} -e channel -e game -u)
+  printf "${white}%3s${colorOff} ${yellow}%s${colorOff} \t\t ${cyan}%s${colorOff} \n" "$[${i}+1])" ${streamFollowingName} "(playing ${streamFollowingGame})"
+  i=$[${i}+1]
+done
+
+echo -n "> "
+read streamToWatch
+
+if [[ ! ${streamToWatch} =~ ^[0-9]+$ ]]
+then
+  rm ${streamTempFile}
+  exit 0
+fi
+
+streamToWatch=$[${streamToWatch}-1]
+streamFollowingUrl=$(cat ${streamTempFile} | jshon -e streams -e ${streamToWatch} -e channel -e url -u)
+
+openStream ${streamFollowingUrl}
+
+rm ${streamTempFile}
+echo
