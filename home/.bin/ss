@@ -1,0 +1,58 @@
+#!/bin/bash
+# A quick and dirty script to take a screenshot, upload it via scp
+# and put a link to it in the clipboard for easy pasting to i.e. IRC.
+# It assumes a lot of things, e.g. that ssh to the target host has 
+# been set up with a working private key, and that xclip and
+# gnome-screenshot is installed.
+#
+# If all you have is a hammer, everything looks like a nail.
+
+# Original made by Einar J. H.
+# http://git.slaskete.net/einar-bin/blob_plain/HEAD:/screenshot.sh
+
+# brew install terminal-notifier
+
+# Settings
+REMOTEUSER="john"
+REMOTEHOST="charlie.rockstable.net"
+REMOTEPATH="/home/sites/sakarias.net/screenshot/"
+LOCALPATH="${HOME}/ownCloud/Screenshots/"
+URLBASE="http://screenshots.sakarias.net"
+
+function errcho() {
+  >&2 echo -e "$@"
+}
+
+function take_screenshot() {
+  FILENAME="$(date | md5 | fold -w 6 | head -n 1).png"
+  screencapture ${@} ${LOCALPATH}/${FILENAME}
+  scp -q ${LOCALPATH}/${FILENAME} ${REMOTEUSER}@${REMOTEHOST}:${REMOTEPATH}
+  echo -n "${URLBASE}/${FILENAME}" | pbcopy
+  terminal-notifier -title "Screenshot" -message "Screenshot published to ${URLBASE}/${FILENAME}"
+}
+
+function show_error() {
+  errcho "Please use one of: -w, --window, -a, --area, -s, --selection,"
+  errcho "                   -f, --full or no argument at all."
+  exit 1
+}
+
+if [ ! ${1} ]
+then
+  show_error
+fi
+
+case ${1} in
+  -w|--window)
+    take_screenshot -o
+    ;;
+  -a|--area|-s|--selection)
+    take_screenshot -i
+    ;;
+  ""|-f|--full)
+    take_screenshot
+    ;;
+  *)
+    show_error
+    ;;
+esac
