@@ -11,24 +11,33 @@
 # http://git.slaskete.net/einar-bin/blob_plain/HEAD:/screenshot.sh
 
 # brew install terminal-notifier
+# brew --prefix
 
 # Settings
-REMOTEUSER="john"
-REMOTEHOST="charlie.rockstable.net"
-REMOTEPATH="/home/sites/sakarias.net/screenshot/"
-LOCALPATH="${HOME}/ownCloud/Screenshots/"
-URLBASE="http://screenshots.sakarias.net"
+remoteUser="john"
+remoteHost="charlie.rockstable.net"
+remotePath="/home/sites/sakarias.net/screenshot/"
+localPath="${HOME}/ownCloud/Screenshots/"
+urlBase="http://screenshots.sakarias.net"
 
 function errcho() {
   >&2 echo -e "$@"
 }
 
 function take_screenshot() {
-  FILENAME="$(date | md5 | fold -w 6 | head -n 1).png"
-  screencapture ${@} ${LOCALPATH}/${FILENAME}
-  scp -q ${LOCALPATH}/${FILENAME} ${REMOTEUSER}@${REMOTEHOST}:${REMOTEPATH}
-  echo -n "${URLBASE}/${FILENAME}" | pbcopy
-  terminal-notifier -title "Screenshot" -message "Screenshot published to ${URLBASE}/${FILENAME}"
+  fileName="$(date | md5 | fold -w 6 | head -n 1).png"
+  screencapture ${@} ${localPath}/${fileName}
+
+  if [ ${?} -eq 1 ]
+    then
+    # If screencapture fails, exit script
+    exit 1
+  fi
+
+  scp -q ${localPath}/${fileName} ${remoteUser}@${remoteHost}:${remotePath}
+  echo -n "${urlBase}/${fileName}" | pbcopy
+  /usr/local/bin/terminal-notifier -title "Screenshot" -message "Screenshot published to ${urlBase}/${fileName}" \
+                                   -open "${urlBase}/${fileName}" -appIcon $localPath/icon.png
 }
 
 function show_error() {
@@ -46,7 +55,7 @@ case ${1} in
   -w|--window)
     take_screenshot -o
     ;;
-  -a|--area|-s|--selection)
+  -a|--area|-s|--selection|-i)
     take_screenshot -i
     ;;
   ""|-f|--full)
