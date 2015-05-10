@@ -1,67 +1,41 @@
-#!/bin/bash
-# A quick and dirty script to take a screenshot, upload it via scp
-# and put a link to it in the clipboard for easy pasting to i.e. IRC.
-# It assumes a lot of things, e.g. that ssh to the target host has 
-# been set up with a working private key, and that xclip and
-# gnome-screenshot is installed.
-#
-# If all you have is a hammer, everything looks like a nail.
+#!/usr/bin/python
+# pip install pyocclient
+# pip install clipboard
+# pip install keyring
+# pip install pync
 
-# Original made by Einar J. H.
-# http://git.slaskete.net/einar-bin/blob_plain/HEAD:/screenshot.sh
+import re
+import os
+import owncloud
+import clipboard
+import keyring
+import hashlib
+import time
+from pync import Notifier
+from subprocess import call
 
-# brew install terminal-notifier
-# brew --prefix
+ownCloudURL = "https://gamma.rockstable.net/owncloud/" # Remember trailing /
+ownCloudUserName = "john"
 
-# Settings
-remoteUser="john"
-remoteHost="charlie.rockstable.net"
-remotePath="/home/sites/sakarias.net/screenshot/"
-localPath="${HOME}/ownCloud/Screenshots/"
-urlBase="http://screenshots.sakarias.net"
+#-------------------------------------------------------------------------------
 
-function errcho() {
-  >&2 echo -e "$@"
-}
+fileName = hashlib.md5(time.asctime(time.localtime(time.time()))).hexdigest()[:6] + ".png"
+localPath = "/tmp/{}".format(fileName)
+remotePath = "Screenshots/{}".format(fileName)
 
-function take_screenshot() {
-  fileName="$(date | md5 | fold -w 6 | head -n 1).png"
-  screencapture ${@} ${localPath}/${fileName}
+call("screencapture -i {}".format(localPath), shell=True)
 
-  if [ ${?} -eq 1 ]
-    then
-    # If screencapture fails, exit script
-    exit 1
-  fi
+oc = owncloud.Client(ownCloudURL)
+password = keyring.get_password("owncloud", ownCloudUserName)
+oc.login(ownCloudUserName, password)
 
-  scp -q ${localPath}/${fileName} ${remoteUser}@${remoteHost}:${remotePath}
-  echo -n "${urlBase}/${fileName}" | pbcopy
-  /usr/local/bin/terminal-notifier -title "Screenshot" -message "Screenshot published to ${urlBase}/${fileName}" \
-                                   -open "${urlBase}/${fileName}" -appIcon $localPath/icon.png
-}
+if oc.put_file(remotePath, localPath):
+    link = oc.share_file_with_link(remotePath)
+    #uri = re.sub(r"index.php/", "", link.link)
+    uri = ownCloudURL + "index.php/s/" + link.link.rsplit("=")[2]
+    clipboard.copy(uri)
+    Notifier.notify("Shared {}".format(fileName), title="Screenshot", group="screenie")
+else:
+    Notifier.notify("Failed to share {}".format(fileName), title="Screenshot", group="screenie")
 
-function show_error() {
-  errcho "Please use one of: -w, --window, -a, --area, -s, --selection,"
-  errcho "                   -f, --full or no argument at all."
-  exit 1
-}
-
-if [ ! ${1} ]
-then
-  show_error
-fi
-
-case ${1} in
-  -w|--window)
-    take_screenshot -o
-    ;;
-  -a|--area|-s|--selection|-i)
-    take_screenshot -i
-    ;;
-  ""|-f|--full)
-    take_screenshot
-    ;;
-  *)
-    show_error
-    ;;
-esac
+os.remove(localPath)
