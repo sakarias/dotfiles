@@ -55,7 +55,7 @@ else
 fi
 
 function openStream {
-  livestreamer -Q -p "/Applications/VLC.app/Contents/MacOS/VLC --file-caching=5000" --twitch-oauth-token ${twitchToken} ${1} ${liveStreamerQuality}
+  /usr/local/bin/livestreamer -Q -p "/Applications/VLC.app/Contents/MacOS/VLC --file-caching=5000" --twitch-oauth-token ${twitchToken} ${1} ${liveStreamerQuality}
 }
 
 function cleanUp {
