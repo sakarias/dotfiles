@@ -1,3 +1,12 @@
+#!/bin/bash
+
+# Depends on jshon (brew install jshon)
+# ${HOME}/.livestreamerrc needs the following
+#
+# twitch-oauth-token=<your token>
+# default-stream=<desired stream quality> (like best, 720p, 480p, mobile, worst)
+#
+
 liveStreamerConfig=${HOME}/.livestreamerrc
 
 colorOff='\033[0m'
