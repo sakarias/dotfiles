@@ -94,7 +94,7 @@ do
         -subtitle "${streamFollowingName2} is broadcasting now." \
         -message "Playing ${streamFollowingGame}" \
         -appIcon ${HOME}/.bin/twitch.png \
-        -execute "${HOME}/.bin/twitch ${streamFollowingName}"
+        -execute "${livestreamer} twitch.tv/${streamFollowingName} > /dev/null 2>&1"
     else
       osascript -e 'display notification "'"Playing ${streamFollowingGame}"'" with title "'"${streamFollowingName2} is broadcasting now."'"'
     fi
