@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>net.rockstable.twitchnotify</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/john/.bin/twitch_notify</string>
+  </array>
+  <key>StandardErrorPath</key>
+  <string>/Users/Shared/twitch/twitch_err.log</string>
+  <key>StandardOutPath</key>
+  <string>/Users/Shared/twitch/twitch.log</string>
+  <key>StartInterval</key>
+  <integer>900</integer>
+</dict>
+</plist>
+
+<!-- Set correct path! -->
+<!-- Place file in /Users/$USER/Library/LaunchAgents -->
+<!-- Load with "launchctl load /Users/$USER/Library/LaunchAgents/net.rockstable.twitchnotify.plist -->
+<!-- Unlad with "launchctl unload /Users/$USER/Library/LaunchAgents/net.rockstable.twitchnotify.plist -->
