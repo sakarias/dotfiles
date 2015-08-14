@@ -7,8 +7,6 @@
 # default-stream=<desired stream quality> (like best, 720p, 480p, mobile, worst)
 #
 
-liveStreamerConfig=${HOME}/.livestreamerrc
-
 colorOff='\033[0m'
 yellow='\033[0;33m'
 cyan='\033[0;36m'
@@ -32,8 +30,10 @@ then
   exit 1
 fi
 
+liveStreamerConfig=${HOME}/.livestreamerrc
 jshon="/usr/local/bin/jshon"
 livestreamer="/usr/local/bin/livestreamer"
+streamOnlineFile="/tmp/twitch_notify"
 
 if [ -e ${liveStreamerConfig} ]
 then
@@ -57,8 +57,6 @@ fi
 function cleanUp {
   rm ${streamTempFile}
 }
-
-streamOnlineFile="/tmp/twitch_notify"
 
 if [ ! -f ${streamOnlineFile} ]
 then
