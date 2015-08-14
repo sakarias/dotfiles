@@ -16,7 +16,7 @@ red='\033[1;31m'
 white='\033[1;37m'
 green='\033[4;32m'
 
-if [ ! -e "/usr/local/bin/jshon" ]
+if [ ! -x "/usr/local/bin/jshon" ]
 then
   echo
   echo -e "${red}Error:${colorOff} jshon is not installed."
