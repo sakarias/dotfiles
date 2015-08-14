@@ -97,4 +97,3 @@ done
 
 echo "streamOnline=(${streamOnlineTmp[@]})" > ${streamOnlineFile}
 cleanUp
-echo
