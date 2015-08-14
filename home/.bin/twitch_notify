@@ -24,6 +24,8 @@ then
   exit 1
 fi
 
+jshon="/usr/local/bin/jshon"
+
 if [ -e ${liveStreamerConfig} ]
 then
   twitchToken=$(grep "twitch-oauth-token" ${liveStreamerConfig} | cut -f 2 -d "=")
@@ -61,14 +63,14 @@ streamTempFile=$(mktemp /tmp/twitch.XXXXXXXXXX)
 curl -s -H "Accept: application/vnd.twitchtv.v3+json" \
    -H "Authorization: OAuth ${twitchToken}" \
    -X GET https://api.twitch.tv/kraken/streams/followed \
-   | jshon > ${streamTempFile}
-streamFollowingTotal=$(cat ${streamTempFile} | jshon -e _total)
+   | ${jshon} > ${streamTempFile}
+streamFollowingTotal=$(cat ${streamTempFile} | ${jshon} -e _total)
 
 i=0
 while [ ${i} -lt ${streamFollowingTotal} ]
 do
-  streamFollowingName=$(cat ${streamTempFile} | jshon -e streams -e ${i} -e channel -e name -u)
-  streamFollowingGame=$(cat ${streamTempFile} | jshon -e streams -e ${i} -e channel -e game -u)
+  streamFollowingName=$(cat ${streamTempFile} | ${jshon} -e streams -e ${i} -e channel -e name -u)
+  streamFollowingGame=$(cat ${streamTempFile} | ${jshon} -e streams -e ${i} -e channel -e game -u)
   streamFollowingName2="$(tr '[:lower:]' '[:upper:]' <<< ${streamFollowingName:0:1})${streamFollowingName:1}"
   
   if [[ " ${streamOnline[@]} " =~ " ${streamFollowingName} " ]]; then
