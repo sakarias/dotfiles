@@ -31,7 +31,7 @@ then
   twitchToken=$(grep "twitch-oauth-token" ${liveStreamerConfig} | cut -f 2 -d "=")
   liveStreamerQualitySetting=$(grep "default-stream" ${liveStreamerConfig} | cut -f 2 -d "=")
 
-  if [ ! ${twitchToken} ];
+  if [ ! ${twitchToken} ]
   then
     echo
     echo -e "${red}Error:${colorOff} Could not find your Twitch Token from LiveStreamer config file."
@@ -51,7 +51,7 @@ function cleanUp {
 
 streamOnlineFile="/tmp/twitch_notify"
 
-if [ ! -f ${streamOnlineFile} ];
+if [ ! -f ${streamOnlineFile} ]
 then
   echo "streamOnline=()" > ${streamOnlineFile}
 fi
@@ -67,16 +67,19 @@ curl -s -H "Accept: application/vnd.twitchtv.v3+json" \
 streamFollowingTotal=$(cat ${streamTempFile} | ${jshon} -e _total)
 
 i=0
+streamOnlineTmp=()
+
 while [ ${i} -lt ${streamFollowingTotal} ]
 do
   streamFollowingName=$(cat ${streamTempFile} | ${jshon} -e streams -e ${i} -e channel -e name -u)
   streamFollowingGame=$(cat ${streamTempFile} | ${jshon} -e streams -e ${i} -e channel -e game -u)
   streamFollowingName2="$(tr '[:lower:]' '[:upper:]' <<< ${streamFollowingName:0:1})${streamFollowingName:1}"
   
-  if [[ " ${streamOnline[@]} " =~ " ${streamFollowingName} " ]]; then
-    echo "nothing" > /dev/null 2>&1
+  if [[ " ${streamOnline[@]} " =~ " ${streamFollowingName} " ]]
+  then
+    streamOnlineTmp+=(${streamFollowingName})
   else
-    if [ -x /usr/local/bin/terminal-notifier ];
+    if [ -x /usr/local/bin/terminal-notifier ]
     then
       /usr/local/bin/terminal-notifier -title "Twitch broadcast" \
         -subtitle "${streamFollowingName2} is broadcasting now." \
@@ -87,10 +90,11 @@ do
       osascript -e 'display notification "'"Playing ${streamFollowingGame}"'" with title "'"${streamFollowingName2} is broadcasting now."'"'
     fi
     sleep 5
-    streamOnline+=(${streamFollowingName})
+    streamOnlineTmp+=(${streamFollowingName})
   fi
   i=$[${i}+1]
 done
-echo "streamOnline=(${streamOnline[@]})" > ${streamOnlineFile}
+
+echo "streamOnline=(${streamOnlineTmp[@]})" > ${streamOnlineFile}
 cleanUp
 echo
