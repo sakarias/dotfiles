@@ -1,0 +1,12 @@
+#! /bin/bash
+
+cd /home/john/Dropbox/Torrents
+for file in *.torrent
+do
+  if [ ! ${file} ]
+  then
+    transmission-remote -a "${file}"
+    mv "${file}" "${file}".added
+    #echo ${file}
+  fi
+done
