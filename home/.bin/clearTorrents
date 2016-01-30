@@ -1,0 +1,16 @@
+#! /bin/bash
+torrentList=$(transmission-remote --list | sed -e '1d;$d;s/^ *//' | cut --only-delimited -d " " -f 1)
+torrentTmpFile=$(mktemp)
+for torrentID in ${torrentList}
+do
+  torrentID=$(echo ${torrentID} | sed 's:*::')
+  torrentInfo=$(transmission-remote --torrent ${torrentID} --info > ${torrentTmpFile})
+  torrentName=$(grep "Name:" ${torrentTmpFile} | cut -f 2 -d ":" )
+  torrentComplete=$(grep "Percent Done: 100%" ${torrentTmpFile})
+  torrentStopped=$(grep "State: Finished" ${torrentTmpFile})
+  if [ -n "${torrentComplete}" ] && [ -n "${torrentStopped}" ];
+  then
+    transmission-remote --torrent ${torrentID} --remove-and-delete
+  fi
+done
+rm ${torrentTmpFile}
