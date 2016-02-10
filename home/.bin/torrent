@@ -1,12 +1,13 @@
 #! /bin/bash
-
+IFS=","
 cd /home/john/Dropbox/Torrents
-for file in *.torrent
+for file in $(find . -type f -name "*.torrent")
 do
-  if [ ! ${file} ]
+  if [ -n "${file}" ]
   then
     transmission-remote -a "${file}"
     mv "${file}" "${file}".added
     #echo ${file}
   fi
 done
+unset IFS
