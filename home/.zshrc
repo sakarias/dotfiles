@@ -15,7 +15,7 @@ ZSH_THEME="af-magic"
 
 alias ssh_local="csshX aptproxy.home.rockstable.net bast01.home.rockstable.net emby.home.rockstable.net kvm01.home.rockstable.net mon.home.rockstable.net ns01.home.rockstable.net ns02.home.rockstable.net openvpn01.home.rockstable.net plex.home.rockstable.net sab01.home.rockstable.net testing.home.rockstable.net torrent.home.rockstable.net web.home.rockstable.net"
 alias ssh_remote="csshX alpha.rockstable.net echo.rockstable.net foxtrot.rockstable.net gamma.rockstable.net charlie.rockstable.net"
-alias mc="mc /download/complete /media"
+alias mc="mc /download/complete /storage"
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
