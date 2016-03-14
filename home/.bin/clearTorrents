@@ -3,14 +3,24 @@ torrentList=$(transmission-remote --list | sed -e '1d;$d;s/^ *//' | cut --only-d
 torrentTmpFile=$(mktemp)
 for torrentID in ${torrentList}
 do
+
   torrentID=$(echo ${torrentID} | sed 's:*::')
   torrentInfo=$(transmission-remote --torrent ${torrentID} --info > ${torrentTmpFile})
   torrentName=$(grep "Name:" ${torrentTmpFile} | cut -f 2 -d ":" )
   torrentComplete=$(grep "Percent Done: 100%" ${torrentTmpFile})
   torrentStopped=$(grep "State: Finished" ${torrentTmpFile})
+  torrentSeeding=$(grep "State: Seeding" ${torrentTmpFile})
+  torrentRatio=$(grep "Ratio:" ${torrentTmpFile} | tr -d '[:blank:]' | cut -f 2 -d ":" | xargs printf "%.*f\n" 0)
+
   if [ -n "${torrentComplete}" ] && [ -n "${torrentStopped}" ];
   then
     transmission-remote --torrent ${torrentID} --remove-and-delete
   fi
+  if [ -n "${torrentComplete}" ] && [ -n "${torrentSeeding}" ] && [ "${torrentRatio}" -gt "3" ]
+  then
+    transmission-remote --torrent ${torrentID} --remove-and-delete
+  fi
+
 done
+
 rm ${torrentTmpFile}
