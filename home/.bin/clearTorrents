@@ -1,21 +1,29 @@
 #! /bin/bash
-torrentList=$(transmission-remote --list | sed -e '1d;$d;s/^ *//' | cut --only-delimited -d " " -f 1)
+torrentList=$(transmission-remote --list | sed -e '1d;$d;s/^ *//' | cut --only-delimited -d " " -f 1 | sed 's:*::')
 torrentTmpFile=$(mktemp)
 for torrentID in ${torrentList}
 do
 
-  torrentID=$(echo ${torrentID} | sed 's:*::')
   torrentInfo=$(transmission-remote --torrent ${torrentID} --info > ${torrentTmpFile})
-  torrentName=$(grep "Name:" ${torrentTmpFile} | cut -f 2 -d ":" )
+  #torrentName=$(grep "Name:" ${torrentTmpFile} | cut -f 2 -d ":" )
+  torrentTracker=$(grep "torrent not registered with this tracker" ${torrentTmpFile})
+
+  if [ -n "${torrentTracker}" ];
+  then
+    transmission-remote --torrent ${torrentID} --remove-and-delete
+  fi
+
   torrentComplete=$(grep "Percent Done: 100%" ${torrentTmpFile})
   torrentStopped=$(grep "State: Finished" ${torrentTmpFile})
-  torrentSeeding=$(grep "State: Seeding" ${torrentTmpFile})
-  torrentRatio=$(grep "Ratio:" ${torrentTmpFile} | tr -d '[:blank:]' | cut -f 2 -d ":" | xargs printf "%.*f\n" 0)
 
   if [ -n "${torrentComplete}" ] && [ -n "${torrentStopped}" ];
   then
     transmission-remote --torrent ${torrentID} --remove-and-delete
   fi
+
+  torrentSeeding=$(grep "State: Seeding" ${torrentTmpFile})
+  torrentRatio=$(grep "Ratio:" ${torrentTmpFile} | tr -d '[:blank:]' | cut -f 2 -d ":" | xargs printf "%.*f\n" 0)
+
   if [ -n "${torrentComplete}" ] && [ -n "${torrentSeeding}" ] && [ "${torrentRatio}" -gt "3" ]
   then
     transmission-remote --torrent ${torrentID} --remove-and-delete
