@@ -74,6 +74,11 @@ export LC_ALL=en_US.UTF-8
 #   export EDITOR='mvim'
 # fi
 
+if [[ -x "/usr/bin/neofetch" ]]; then
+  /usr/bin/neofetch --color_blocks off
+fi
+
+
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
