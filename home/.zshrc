@@ -75,6 +75,7 @@ export LC_ALL=en_US.UTF-8
 # fi
 
 if [[ -x "/usr/bin/neofetch" ]]; then
+  clear
   /usr/bin/neofetch --color_blocks off
 fi
 
