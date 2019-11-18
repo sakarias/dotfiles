@@ -54,6 +54,7 @@ alias mc="mc /download/complete /storage"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(git osx brew command-not-found mosh sublime sudo tmux ssh-agent autojump)
+ZSH_TMUX_AUTOSTART=true
 
 source $ZSH/oh-my-zsh.sh
 
