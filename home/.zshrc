@@ -55,7 +55,7 @@ alias mc="mc /download/complete /storage"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(git osx brew command-not-found mosh sublime sudo tmux ssh-agent autojump)
 ZSH_TMUX_AUTOSTART=true
-
+DISABLE_UPDATE_PROMPT=true
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
