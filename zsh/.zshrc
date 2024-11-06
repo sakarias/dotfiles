@@ -1,8 +1,7 @@
-<<<<<<< HEAD
-[[ -f /usr/local/bin/nvim ]] && alias vim='nvim'
+[[ -f /usr/local/bin/nvim || -f /opt/homebrew/bin/nvim ]] && alias vim=nvim
 [[ -f /usr/local/bin/bat ]] && alias cat='bat -A'
 
-if [[ -f /usr/local/bin/zoxide ]] 
+if [[ -f /usr/local/bin/zoxide || -f /opt/homebrew/bin/zoxide ]] 
 then
   eval "$(zoxide init zsh)"
   alias cd=z
@@ -27,26 +26,6 @@ then
   # specialty views
   alias lS='eza -1 --icons'
   alias lt='eza --tree --level=2 --icons'
-=======
-[[ -f /usr/local/bin/nvim || -f /opt/homebrew/bin/nvim ]] && alias vim=nvim
-[[ -f /usr/local/bin/bat ]] && alias cat=bat
-
-if [[ -f /usr/local/bin/zoxide || -f /opt/homebrew/bin/zoxide ]] 
-then
-  eval "$(zoxide init zsh)"
-  alias cd=z
-
-  alias ls='eza --icons'
-  alias l='eza -lbF --git'
-  alias ll='eza -lbGF --git'
-  alias llm='eza -lbGd --git --sort=modified'
-  alias la='eza -lbhHigUmuSa --time-style=long-iso --git --color-scale'
-  alias lx='eza -lbhHigUmuSa@ --time-style=long-iso --git --color-scale'
-
-  # specialty views
-  alias lS='eza -1'
-  alias lt='eza --tree --level=2'
->>>>>>> 5e0e58089ba158e9c5805684e76b6023fa1f119b
   alias l.="eza -a | grep -E '^\.'"
 fi
 
@@ -61,7 +40,16 @@ setopt hist_ignore_dups
 setopt hist_verify
 
 source /usr/local/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+source ~/.zsh/zsh-window-title/zsh-window-title.zsh
 source ~/.zsh/zsh-ssh/zsh-ssh.zsh
 source ~/.config/fzf-git.sh
 
 eval "$(starship init zsh)"
+
+#case $- in *i*)
+#  if [ -z "$TMUX" ]
+#  then 
+#    exec tmux
+#  fi
+#  ;;
+#esac

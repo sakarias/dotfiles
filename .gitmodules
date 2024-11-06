@@ -12,3 +12,6 @@
 [submodule "tmux/.tmux/plugins/tmux"]
 	path = tmux/.tmux/plugins/tmux
 	url = https://git::@github.com/catppuccin/tmux
+[submodule "zsh/.zsh/zsh-window-title"]
+	path = zsh/.zsh/zsh-window-title
+	url = https://github.com/olets/zsh-window-title.git
