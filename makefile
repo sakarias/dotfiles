@@ -3,3 +3,6 @@ all:
 
 delete:
 	stow --dotfiles --verbose --target=$$HOME --delete */
+
+submodule:
+	git submodule update --init --recursive
