@@ -28,6 +28,8 @@ $package\
 $aws\
 $docker_context\
 $jobs\
+$username\
+$hostname\
 $cmd_duration\
 $line_break\
 $character"""
@@ -152,6 +154,15 @@ symbol = " "
 
 [hostname]
 ssh_symbol = " "
+ssh_only = true
+style = 'teal'
+trim_at = ''
+format = '[$hostname]($style) '
+
+[username]
+style_user = 'peach'
+style_root = 'red bold'
+format = '[$user]($style)@'
 
 [java]
 symbol = " "
