@@ -63,6 +63,7 @@ source ~/.zsh/zsh-window-title/zsh-window-title.zsh
 source ~/.zsh/zsh-ssh/zsh-ssh.zsh
 source ~/.config/fzf-git.sh
 
+export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 eval "$(starship init zsh)"
 
 #case $- in *i*)
