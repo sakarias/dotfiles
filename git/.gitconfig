@@ -12,3 +12,9 @@
 	first = rev-list --max-parents=0 HEAD
 [core]
 	excludesfile = /Users/john2/.gitignore
+[difftool]
+    prompt = true
+[diff]
+    tool = nvimdiff
+[difftool "nvimdiff"]
+    cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
