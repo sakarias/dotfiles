@@ -1,20 +1,21 @@
-[[ -f /usr/local/bin/nvim || -f /opt/homebrew/bin/nvim ]] && alias vim=nvim
+[[ -f /usr/local/bin/nvim || -f /usr/bin/nvim || -f /opt/homebrew/bin/nvim ]] && alias vim=nvim
 [[ -f /usr/local/bin/bat ]] && alias cat='bat -A'
+[[ -f /usr/bin/batcat ]] && alias cat='batcat -A'
 
-if [[ -f /usr/local/bin/zoxide || -f /opt/homebrew/bin/zoxide ]] 
+if [[ -f /usr/local/bin/zoxide || -f /usr/bin/zoxide || -f /opt/homebrew/bin/zoxide ]] 
 then
   eval "$(zoxide init zsh)"
   alias cd=z
 fi
 
-if [[ -f /usr/local/bin/fuck ]] 
+if [[ -f /usr/local/bin/fuck || -f /usr/bin/thefuck ]] 
 then
   eval "$(thefuck --alias)"
   alias ff=fuck
   alias ffs=fuck
 fi
 
-if [[ -f /usr/local/bin/eza ]] 
+if [[ -f /usr/local/bin/eza || -f /usr/bin/eza ]] 
 then
   alias ls='eza --icons'
   alias l='eza -lbF --git --icons'
