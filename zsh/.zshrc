@@ -39,7 +39,21 @@ setopt hist_expire_dups_first
 setopt hist_ignore_dups
 setopt hist_verify
 
-source /usr/local/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+# Activate syntax highlighting
+source .zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# Disable underline
+(( ${+ZSH_HIGHLIGHT_STYLES} )) || typeset -A ZSH_HIGHLIGHT_STYLES
+ZSH_HIGHLIGHT_STYLES[path]=none
+ZSH_HIGHLIGHT_STYLES[path_prefix]=none
+# Change colors
+# export ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=blue
+# export ZSH_HIGHLIGHT_STYLES[precommand]=fg=blue
+# export ZSH_HIGHLIGHT_STYLES[arg0]=fg=blue
+
+# Activate autosuggestions
+source .zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+#source /usr/local/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 source ~/.zsh/zsh-window-title/zsh-window-title.zsh
 source ~/.zsh/zsh-ssh/zsh-ssh.zsh
 source ~/.config/fzf-git.sh
