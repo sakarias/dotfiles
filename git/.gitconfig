@@ -10,3 +10,5 @@
 	enabled = true
 [alias]
 	first = rev-list --max-parents=0 HEAD
+[core]
+	excludesfile = /Users/john2/.gitignore
