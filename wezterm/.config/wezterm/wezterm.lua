@@ -18,6 +18,7 @@ config = {
 	font = wezterm.font("JetBrains Mono", { weight = "Bold" }),
 	enable_tab_bar = true,
 	color_scheme = "Catppuccin Mocha",
+	send_composed_key_when_left_alt_is_pressed = true,
 
 	hyperlink_rules = {
 		-- Matches: a URL in parens: (URL)
