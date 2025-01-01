@@ -97,3 +97,14 @@ then
   eval "$(starship init zsh)"
 fi
 
+if [ -n "${SSH_CLIENT}" ]
+then
+  if [ -f "/usr/bin/tmux" ]
+  then
+    if [ -z "${TMUX}" ]
+    then
+      tmux attach -d || tmux new
+    fi
+  fi
+fi
+
