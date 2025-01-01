@@ -1,3 +1,5 @@
+HOMEBREW_NO_ENV_HINTS=0
+
 [[ -f /usr/local/bin/nvim || -f /usr/bin/nvim || -f /opt/homebrew/bin/nvim ]] && alias vim=nvim
 [[ -f /usr/local/bin/bat ]] && alias cat='bat -A'
 [[ -f /usr/bin/batcat ]] && alias cat='batcat -A'
