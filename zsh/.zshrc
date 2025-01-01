@@ -64,21 +64,36 @@ setopt APPENDHISTORY            # ensures that each command entered in the curre
 setopt INC_APPEND_HISTORY       # history file is updated immediately after a command is entered
 # END HISTORY
 
+# Activate syntax highlighting
+if [ -f "~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]
+then
+  source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  # Disable underline
+  (( ${+ZSH_HIGHLIGHT_STYLES} )) || typeset -A ZSH_HIGHLIGHT_STYLES
+  ZSH_HIGHLIGHT_STYLES[path]=none
+  ZSH_HIGHLIGHT_STYLES[path_prefix]=none
+  # Change colors
+  # export ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=blue
+  # export ZSH_HIGHLIGHT_STYLES[precommand]=fg=blue
+  # export ZSH_HIGHLIGHT_STYLES[arg0]=fg=blue
+fi
+
 # Activate autosuggestions
-source .zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+[[ -f ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+if [ -f /usr/bin/fzf ]
+then
+  source <(fzf --zsh)
+  source ~/.config/fzf-git.sh
+fi
 
 #source /usr/local/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
-source ~/.zsh/zsh-window-title/zsh-window-title.zsh
-source ~/.zsh/zsh-ssh/zsh-ssh.zsh
-source ~/.config/fzf-git.sh
+[[ -f ~/.zsh/zsh-window-title/zsh-window-title.zsh ]] && source ~/.zsh/zsh-window-title/zsh-window-title.zsh
+[[ -f ~/.ssh/config ]] && source ~/.zsh/zsh-ssh/zsh-ssh.zsh
 
-export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
-eval "$(starship init zsh)"
+if [ -f /usr/local/bin/starship]
+then
+  export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
+  eval "$(starship init zsh)"
+fi
 
-#case $- in *i*)
-#  if [ -z "$TMUX" ]
-#  then 
-#    exec tmux
-#  fi
-#  ;;
-#esac
