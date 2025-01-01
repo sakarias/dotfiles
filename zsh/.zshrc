@@ -37,26 +37,32 @@ export LANG="en_US.UTF-8" # Sets default locale for all categories
 export LC_ALL="en_US.UTF-8" # Overrides all other locale settings
 export LC_CTYPE="en_US.UTF-8" # Controls character classification and case conversion
 
-HISTFILE=${HOME}/.zsh_history
-SAVEHIST=1000
-HISTSIZE=999
-export PATH="${HOME}/.bin:/usr/local/sbin:${PATH}"
+export SAVEHIST=10000000
+export HISTFILE=${HOME}/.zsh_history
+export HISTFILESIZE=${SAVEHIST}
+export HISTSIZE=${SAVEHIST}
+export HIST_STAMPS="yyyy-dd-mm"
+export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S] "
+export PATH="${HOME}/.bin:/usr/local/sbin:/usr/local/opt/ruby/bin:/usr/local/lib/ruby/gems/3.3.0/bin:${PATH}"
 
-setopt share_history
-setopt hist_expire_dups_first
-setopt hist_ignore_dups
-setopt hist_verify
+#setopt share_history
+#setopt hist_expire_dups_first
+#setopt hist_ignore_dups
+#setopt hist_verify
 
-# Activate syntax highlighting
-source .zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-# Disable underline
-(( ${+ZSH_HIGHLIGHT_STYLES} )) || typeset -A ZSH_HIGHLIGHT_STYLES
-ZSH_HIGHLIGHT_STYLES[path]=none
-ZSH_HIGHLIGHT_STYLES[path_prefix]=none
-# Change colors
-# export ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=blue
-# export ZSH_HIGHLIGHT_STYLES[precommand]=fg=blue
-# export ZSH_HIGHLIGHT_STYLES[arg0]=fg=blue
+# HISTORY
+setopt EXTENDED_HISTORY         # Write the history file in the ':start:elapsed;command' format.
+setopt HIST_EXPIRE_DUPS_FIRST   # Expire a duplicate event first when trimming history.
+setopt HIST_FIND_NO_DUPS        # Do not display a previously found event.
+setopt HIST_IGNORE_ALL_DUPS     # Delete an old recorded event if a new event is a duplicate.
+setopt HIST_IGNORE_DUPS         # Do not record an event that was just recorded again.
+setopt HIST_IGNORE_SPACE        # Do not record an event starting with a space.
+setopt HIST_SAVE_NO_DUPS        # Do not write a duplicate event to the history file.
+setopt SHARE_HISTORY            # Share history between all sessions.
+setopt HIST_VERIFY
+setopt APPENDHISTORY            # ensures that each command entered in the current session is appended to the history file immediately after execution
+setopt INC_APPEND_HISTORY       # history file is updated immediately after a command is entered
+# END HISTORY
 
 # Activate autosuggestions
 source .zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
